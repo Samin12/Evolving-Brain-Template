@@ -96,8 +96,40 @@ fi
 
 echo ""
 
-# ---------- 4. Open in Obsidian ----------
-echo "4. Opening the vault in Obsidian..."
+# ---------- 4. Skillkit (powers the Agentfiles dashboard) ----------
+echo "4. Installing skillkit (Agentfiles dashboard dependency)..."
+if command -v npm >/dev/null 2>&1; then
+  if command -v skillkit >/dev/null 2>&1; then
+    SKILLKIT_VERSION=$(skillkit --version 2>/dev/null || echo "unknown")
+    echo "  ✓ skillkit already installed ($SKILLKIT_VERSION)"
+  else
+    echo "  → Installing @crafter/skillkit globally via npm..."
+    if npm install -g @crafter/skillkit >/dev/null 2>&1; then
+      echo "  ✓ skillkit installed"
+    else
+      echo "  ⚠ skillkit install failed — try manually: npm i -g @crafter/skillkit"
+      echo "    (not blocking — everything else still works, just the Agentfiles dashboard won't)"
+    fi
+  fi
+
+  if command -v skillkit >/dev/null 2>&1; then
+    echo "  → Running skillkit scan to index your local agent skills..."
+    if skillkit scan >/dev/null 2>&1; then
+      echo "  ✓ Initial scan complete"
+    else
+      echo "  ⚠ skillkit scan didn't complete cleanly — run it manually: skillkit scan"
+    fi
+  fi
+else
+  echo "  ⚠ npm not found — skipping skillkit install"
+  echo "    Install Node.js from https://nodejs.org, then run: npm i -g @crafter/skillkit && skillkit scan"
+  echo "    (not blocking — Obsidian and the other plugins still work; only the Agentfiles dashboard view needs skillkit)"
+fi
+
+echo ""
+
+# ---------- 5. Open in Obsidian ----------
+echo "5. Opening the vault in Obsidian..."
 if [[ "$(uname)" == "Darwin" ]]; then
   # Use Obsidian's URI scheme to open this specific vault
   # Obsidian registers itself to handle obsidian:// URIs
@@ -111,7 +143,7 @@ fi
 
 echo ""
 
-# ---------- 5. Post-setup instructions ----------
+# ---------- 6. Post-setup instructions ----------
 cat <<'EOF'
 === Setup done ===
 

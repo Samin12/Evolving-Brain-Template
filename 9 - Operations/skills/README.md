@@ -10,7 +10,7 @@ Capabilities the brain expects to have available. Two kinds:
 | Plugin | What it does | Version | Source | Required |
 |---|---|---|---|---|
 | `internetvin-terminal` | Embedded terminal with multi-tab support inside Obsidian | 1.1.2 | [internetvin/internetvin-terminal](https://github.com/internetvin/internetvin-terminal) | yes |
-| `agentfiles` | Browse / edit AI agent files (Claude Code, Cursor, Codex, Windsurf, …) from Obsidian | 0.7.2 | [railly/agentfiles](https://github.com/railly/agentfiles) | yes |
+| `agentfiles` | Browse / edit AI agent files (Claude Code, Cursor, Codex, Windsurf, …) from Obsidian. Dashboard view requires skillkit (auto-installed by `setup.sh`). | 0.7.2 | [railly/agentfiles](https://github.com/railly/agentfiles) | yes |
 | `obsidian-excalidraw-plugin` | Sketch drawings, diagrams, hand-drawn mind maps | 2.22.0 | [zsviczian/obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin) | yes |
 
 All three are MIT-licensed and redistributed with credit per `ATTRIBUTION.md`.
@@ -26,6 +26,14 @@ You can install these via Obsidian's community plugin browser when you want them
 | Dataview | Query the vault like a database — once you have >10 entity pages with frontmatter, Dataview becomes the read layer on top | Community plugins browser |
 | Templater | Executing templates with date math, frontmatter injection, and scripting | Community plugins browser |
 | Git (by Vinzent) | Commit, push, and pull from inside Obsidian instead of the terminal | Community plugins browser |
+
+## CLI companions (Active)
+
+Tools installed globally via package managers, separate from Obsidian and Claude Code.
+
+| Tool | What it does | Install | Required | Source |
+|---|---|---|---|---|
+| `@crafter/skillkit` | Local-first analytics for AI agent skills (usage, burn rate, context budget, prune unused). Powers the Agentfiles dashboard. | `npm i -g @crafter/skillkit && skillkit scan` — also handled by `scripts/setup.sh` | yes (for the Agentfiles dashboard view) | [crafter-station/skill-kit](https://github.com/crafter-station/skill-kit) |
 
 ## Claude Code skills (Active)
 

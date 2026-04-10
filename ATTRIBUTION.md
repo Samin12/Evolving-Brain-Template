@@ -82,6 +82,14 @@ The vault ships with three community plugins pre-downloaded and enabled (`.obsid
 **License:** MIT — Copyright Zsolt Viczián
 **What it does:** Sketch drawings, diagrams, and hand-drawn mind maps inside Obsidian. The "4D Visual PKM" tool.
 
+### skillkit (CLI companion for Agentfiles)
+
+**Repo:** https://github.com/crafter-station/skill-kit
+**npm package:** `@crafter/skillkit`
+**License:** MIT — same authors as Agentfiles (raillyhugo_, jibaru, cris-fast at crafter-station)
+**What it does:** Local-first analytics for AI agent skills. Tracks usage, measures context budget, highlights burn rate, prunes what you don't use. Powers the dashboard view inside the Agentfiles Obsidian plugin.
+**How we install it:** `scripts/setup.sh` runs `npm i -g @crafter/skillkit && skillkit scan` automatically during setup. Not bundled in the vault because it's a system-wide CLI, not a file-in-folder plugin. If npm isn't installed, the setup script prints the manual install command and continues — skillkit is required only for the Agentfiles dashboard view, not for the core vault.
+
 ## Updating bundled plugins
 
 To bump a plugin version:
