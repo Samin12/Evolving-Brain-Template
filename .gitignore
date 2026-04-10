@@ -1,0 +1,16 @@
+.DS_Store
+.obsidian/workspace*
+.obsidian/cache
+.trash/
+*.tmp
+
+# Secrets — never commit. .env.example is allowed (template only).
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Build artifacts
+site/
