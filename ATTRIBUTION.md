@@ -8,10 +8,17 @@ The Evolving Brain borrows ideas, patterns, and sometimes prompt text from sever
 
 **Repo:** https://github.com/garrytan/gbrain
 **License:** MIT — Copyright (c) 2026 Garry Tan
-**Pinned:** `e9f3c9c24d36a8bbef85ea55411cfe3001d342a3` (2026-04-10)
-**Tracked files:** See `9 - Operations/upstream/gbrain/UPSTREAM.md`
+**Upstream doc pins:** `e9f3c9c24d36a8bbef85ea55411cfe3001d342a3` (2026-04-10) in `9 - Operations/upstream/gbrain/`
+**Runtime install:** `gbrain 0.5.0` installed via `bun install -g github:garrytan/gbrain` (commit `27eb87f`, 2026-04-10)
 
-**What we borrowed:**
+**We now run gbrain as our retrieval layer** (not just track its docs). The architecture:
+
+- **Vault (this repo)** is the canonical source of truth. Every markdown file, every entity page, every log entry lives in git.
+- **gbrain** indexes the vault into Postgres + pgvector via the user's own Supabase project. Provides hybrid keyword + vector search, link graph traversal, and an MCP server.
+- **Sync direction** is vault → gbrain. Writes go to markdown files; `gbrain sync` is called at the end of the inbox processor workflow to push new/changed files into the index. We never write to gbrain as the primary path.
+- **If gbrain disappears**, the vault still works — retrieval falls back to grep via the `query` workflow. No data is lost, just some retrieval speed / semantic capability.
+
+**What we borrowed (in addition to running the tool):**
 - The "compiled truth on top, append-only timeline on bottom" entity page pattern (adopted in `People/`, `5 - Projects/`, `6 - Areas/` templates)
 - The "dream cycle" nightly maintenance concept (adopted as `9 - Operations/workflows/dream cycle.md`)
 - The shape of the skillpack — fat markdown prompts describing HOW an agent uses the brain — validated our `9 - Operations/workflows/` approach

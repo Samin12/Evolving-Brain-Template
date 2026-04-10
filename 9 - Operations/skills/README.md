@@ -33,7 +33,8 @@ Tools installed globally via package managers, separate from Obsidian and Claude
 
 | Tool | What it does | Install | Required | Source |
 |---|---|---|---|---|
-| `@crafter/skillkit` | Local-first analytics for AI agent skills (usage, burn rate, context budget, prune unused). Powers the Agentfiles dashboard. | `npm i -g @crafter/skillkit && skillkit scan` — also handled by `scripts/setup.sh` | yes (for the Agentfiles dashboard view) | [crafter-station/skill-kit](https://github.com/crafter-station/skill-kit) |
+| `gbrain` | Semantic retrieval layer for the vault. Indexes markdown into Postgres + pgvector (via Supabase). Provides hybrid keyword + vector search, link graph traversal, and an MCP server so Claude can query the brain from any surface. | `bun install -g github:garrytan/gbrain` + `gbrain init --url "$SUPABASE_POOLER_URL"` — both handled by `scripts/setup.sh` step 5 | yes (required for semantic search; vault works without it via grep fallback) | [garrytan/gbrain](https://github.com/garrytan/gbrain) |
+| `@crafter/skillkit` | Local-first analytics for AI agent skills (usage, burn rate, context budget, prune unused). Powers the Agentfiles dashboard. | `npm i -g @crafter/skillkit && skillkit scan` — handled by `scripts/setup.sh` step 4 | yes (for the Agentfiles dashboard view) | [crafter-station/skill-kit](https://github.com/crafter-station/skill-kit) |
 
 ## Claude Code skills (Active)
 

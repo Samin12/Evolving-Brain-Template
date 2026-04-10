@@ -80,7 +80,25 @@ Already done. 8-folder PARA structure (Identity, Aspirations, Live Logs, Daily J
 - Cadence: every 3 hours
 - Failure mode: processor opens a GitHub Issue on the repo if it errors
 
-### Phase 6 — MCP server for "Claude reads me from anywhere"
+### Phase 6 — MCP server for "Claude reads me from anywhere" (partial ✅ via gbrain)
+
+**Status update 2026-04-10:** We adopted gbrain as the retrieval layer instead of building our own MCP server from scratch. The user already pays for Supabase, which was the main blocker. See `ATTRIBUTION.md` for architecture details.
+
+- `gbrain 0.5.0` installed globally via bun (`bun install -g github:garrytan/gbrain`)
+- Vault stays canonical; gbrain indexes into the user's Supabase Postgres + pgvector
+- Inbox processor now calls `gbrain sync` at the end of each run (graceful fallback if gbrain isn't initialized)
+- gbrain's built-in MCP server handles the "Claude reads me from anywhere" requirement
+- Local-only query fallback via grep still works if gbrain is unavailable
+
+**What's still to do for full Phase 6 completion:**
+- Run `gbrain init` against the user's actual Supabase Session Pooler URL (blocked on the user providing the right credential type)
+- Run `gbrain import` to index the current vault
+- Wire gbrain's MCP into Claude Desktop + Claude Code MCP configs
+- Test that mobile Claude can query via the gbrain MCP through a relay if needed
+
+**Original Phase 6 plan (kept for reference):**
+
+### Phase 6 (original, superseded by gbrain adoption)
 A thin MCP server exposing:
 - `search_vault(query)` — semantic + keyword search over all markdown
 - `read_entity(path)` — read a specific file

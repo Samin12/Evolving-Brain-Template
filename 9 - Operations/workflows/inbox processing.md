@@ -122,6 +122,20 @@ inbox: N files → M log entries, P entity updates
 
 Push to origin.
 
+### 7. Sync to gbrain (semantic retrieval layer)
+
+After the commit and push, run `gbrain sync --repo "$VAULT_ROOT"` to push the new and changed files into the gbrain index (Postgres + pgvector via the user's Supabase). This is what makes the freshly-processed content searchable via semantic / hybrid search from any Claude surface.
+
+**Graceful fallback rules:**
+- If `gbrain` is not on PATH (not installed), skip this step silently. The vault still works — retrieval falls back to grep via the `query` workflow. Note in the run log that gbrain sync was skipped.
+- If `gbrain` is installed but not initialized (no config at `~/.config/gbrain/config.json`), skip with a one-line note in the commit message and the run log: `gbrain sync skipped: not initialized — run scripts/setup.sh after setting SUPABASE_POOLER_URL`.
+- If `gbrain sync` runs but fails (e.g., network error, Supabase auth problem), log the error in `9 - Operations/runs/YYYY-MM.md` with status `error`, and open a GitHub Issue on the repo if the error repeats across 3 consecutive runs. Do NOT fail the whole processor run — the source of truth (the markdown vault) is already committed.
+- The inbox processor always succeeds or fails on its own merits. Gbrain sync is additive, not load-bearing.
+
+**What sync does:** walks the vault, diffs against the last synced state, pushes new/changed pages, generates embeddings for new chunks, updates the links table, refreshes the full-text index. First sync on a fresh vault takes ~30-60 seconds for a small vault. Incremental syncs are ~1-5 seconds.
+
+**Cost:** ~$0.0001 per new page for embeddings. Negligible at personal-brain scale.
+
 ---
 
 ## Hard rules

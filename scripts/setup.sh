@@ -128,8 +128,106 @@ fi
 
 echo ""
 
-# ---------- 5. Open in Obsidian ----------
-echo "5. Opening the vault in Obsidian..."
+# ---------- 5. gbrain (retrieval layer for semantic search) ----------
+echo "5. Installing gbrain (semantic retrieval layer)..."
+
+# Prefer bun for the install since gbrain is published as a bun-friendly
+# git package. Fall back to npm if bun isn't available.
+install_gbrain() {
+  if command -v bun >/dev/null 2>&1; then
+    echo "  → Installing gbrain globally via bun..."
+    bun install -g github:garrytan/gbrain >/dev/null 2>&1
+  elif command -v npm >/dev/null 2>&1; then
+    echo "  → Installing gbrain globally via npm..."
+    npm install -g github:garrytan/gbrain >/dev/null 2>&1
+  else
+    return 1
+  fi
+}
+
+# Make sure ~/.bun/bin is on PATH for this shell so a just-installed
+# gbrain binary is findable.
+export PATH="$HOME/.bun/bin:$PATH"
+
+if command -v gbrain >/dev/null 2>&1; then
+  GBRAIN_VERSION=$(gbrain --version 2>/dev/null || echo "unknown")
+  echo "  ✓ gbrain already installed ($GBRAIN_VERSION)"
+else
+  if install_gbrain; then
+    export PATH="$HOME/.bun/bin:$PATH"
+    if command -v gbrain >/dev/null 2>&1; then
+      GBRAIN_VERSION=$(gbrain --version 2>/dev/null || echo "unknown")
+      echo "  ✓ gbrain installed ($GBRAIN_VERSION)"
+    else
+      echo "  ⚠ gbrain installed but not on PATH. Add ~/.bun/bin to your shell PATH."
+    fi
+  else
+    echo "  ⚠ Neither bun nor npm found — skipping gbrain install"
+    echo "    Install bun from https://bun.sh, then re-run setup"
+    echo "    (not blocking — the vault works without semantic search, just fall back to grep)"
+  fi
+fi
+
+# Try to initialize gbrain if credentials are set in Vault/.env and not placeholders
+if command -v gbrain >/dev/null 2>&1; then
+  if [[ -f "Vault/.env" ]]; then
+    # Source env into a subshell so we don't leak variables to the calling shell
+    (
+      set -a
+      # shellcheck disable=SC1091
+      source "Vault/.env"
+      set +a
+
+      if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+        echo "  ⚠ OPENAI_API_KEY not set in Vault/.env — skipping gbrain init"
+        echo "    gbrain needs OpenAI for embedding generation. Add your key and re-run."
+        exit 0
+      fi
+
+      if [[ -z "${SUPABASE_POOLER_URL:-}" || "$SUPABASE_POOLER_URL" == *REPLACE_ME* ]]; then
+        echo "  ⚠ SUPABASE_POOLER_URL not set (or still has REPLACE_ME placeholder)"
+        echo "    To get the right value:"
+        echo "      1. Open your Supabase project dashboard"
+        echo "      2. Click 'Connect' (top-right)"
+        echo "      3. Choose the 'Session pooler' tab (NOT Direct connection)"
+        echo "      4. Copy the postgresql:// URL (port 6543)"
+        echo "      5. Paste into Vault/.env as SUPABASE_POOLER_URL=..."
+        echo "      6. Re-run this setup script"
+        echo "    Skipping gbrain init until this is set."
+        exit 0
+      fi
+
+      # Check if already initialized (config file exists)
+      GBRAIN_CONFIG="$HOME/.config/gbrain/config.json"
+      if [[ -f "$GBRAIN_CONFIG" ]]; then
+        echo "  ✓ gbrain already initialized (config at $GBRAIN_CONFIG)"
+        echo "  → Running gbrain doctor..."
+        gbrain doctor --json 2>&1 | head -5 || true
+      else
+        echo "  → Initializing gbrain against your Supabase..."
+        if gbrain init --non-interactive --url "$SUPABASE_POOLER_URL"; then
+          echo "  ✓ gbrain initialized"
+          echo "  → Running first sync of the vault..."
+          if gbrain sync --repo "$VAULT_ROOT" 2>&1 | tail -5; then
+            echo "  ✓ First sync complete — vault is now searchable via gbrain"
+          else
+            echo "  ⚠ First sync had issues. Run manually: gbrain sync --repo \"$VAULT_ROOT\""
+          fi
+        else
+          echo "  ⚠ gbrain init failed. Check that SUPABASE_POOLER_URL is a Session pooler"
+          echo "    string (port 6543), not Direct connection or a PAT. Re-run when fixed."
+        fi
+      fi
+    )
+  else
+    echo "  ⚠ Vault/.env not found — gbrain init will run on next setup when credentials are in place"
+  fi
+fi
+
+echo ""
+
+# ---------- 6. Open in Obsidian ----------
+echo "6. Opening the vault in Obsidian..."
 if [[ "$(uname)" == "Darwin" ]]; then
   # Use Obsidian's URI scheme to open this specific vault
   # Obsidian registers itself to handle obsidian:// URIs
@@ -143,7 +241,7 @@ fi
 
 echo ""
 
-# ---------- 6. Post-setup instructions ----------
+# ---------- 7. Post-setup instructions ----------
 cat <<'EOF'
 === Setup done ===
 
