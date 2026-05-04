@@ -18,11 +18,14 @@ Inspired by gbrain's discovery flow (see `9 - Operations/upstream/gbrain/skills/
 - `~/git/`, `~/src/`, `~/code/`, `~/projects/`, `~/dev/`, `~/work/` (whichever exist)
 - `~/Desktop/`
 - `~/Obsidian/` (common Obsidian vault location)
-- `~/Library/Mobile Documents/iCloud~md~obsidian/` (iCloud-synced Obsidian vaults on macOS)
+- `~/Library/Mobile Documents/iCloud~md~obsidian/` (iCloud-synced Obsidian vaults — macOS)
+- `~/iCloudDrive/iCloud~md~obsidian/` (iCloud-synced Obsidian vaults — Windows)
+- `~/OneDrive/`, `~/OneDrive - <org>/` (Windows: most Windows users keep notes under OneDrive)
 - `~/Dropbox/Apps/remotely-save/` (Obsidian + Dropbox)
 
 **Do NOT scan:**
 - `~/.Trash`, `~/Library` (except the Obsidian iCloud path), `/tmp`, `/var`, `/System`, `/Applications`
+- Windows: `~/AppData/Local`, `~/AppData/Roaming` (except an explicit Obsidian vault), `C:/Windows`, `C:/Program Files*`
 - This repo itself (the brain being onboarded)
 - Anything inside `node_modules`, `.git`, `venv`, `__pycache__`, `.next`, `.cache`, `target`
 

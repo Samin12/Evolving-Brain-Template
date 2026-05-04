@@ -10,7 +10,7 @@
 #   bash scripts/setup.sh
 #
 # What it does:
-#   1. Checks required tools are installed (git, curl, Obsidian on macOS)
+#   1. Checks required tools are installed (git, curl, Obsidian — macOS or Windows)
 #   2. Verifies the bundled Obsidian plugins are present
 #   3. Copies Vault/.env.example → Vault/.env if missing
 #   4. Opens the vault in Obsidian
@@ -21,8 +21,16 @@ set -euo pipefail
 VAULT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$VAULT_ROOT"
 
+# Platform detection (Git Bash/MSYS/Cygwin all report as Windows)
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*) PLATFORM=windows ;;
+  Darwin)               PLATFORM=mac ;;
+  *)                    PLATFORM=linux ;;
+esac
+
 echo "=== Evolving Brain setup ==="
 echo "Vault: $VAULT_ROOT"
+echo "Platform: $PLATFORM"
 echo ""
 
 # ---------- 1. Tool checks ----------
@@ -40,25 +48,53 @@ echo "1. Checking required tools..."
 check_tool git
 check_tool curl
 
-# Obsidian check (macOS-specific; Linux/Windows users should verify manually)
-if [[ "$(uname)" == "Darwin" ]]; then
-  if [[ -d "/Applications/Obsidian.app" ]]; then
-    echo "  ✓ Obsidian (macOS)"
-  else
-    echo "  ⚠ Obsidian.app not found in /Applications/"
-    echo "    Download from https://obsidian.md — then re-run setup"
-    exit 1
-  fi
-else
-  echo "  ⚠ Non-macOS detected. Make sure Obsidian is installed: https://obsidian.md"
-fi
+# Obsidian check (per-platform)
+case "$PLATFORM" in
+  mac)
+    if [[ -d "/Applications/Obsidian.app" ]]; then
+      echo "  ✓ Obsidian (macOS)"
+    else
+      echo "  ⚠ Obsidian.app not found in /Applications/"
+      echo "    Download from https://obsidian.md — then re-run setup"
+      exit 1
+    fi
+    ;;
+  windows)
+    # Windows: Obsidian installs per-user under
+    #   %LOCALAPPDATA%\Programs\Obsidian\Obsidian.exe (NSIS, the default)
+    # or system-wide under
+    #   %ProgramFiles%\Obsidian\Obsidian.exe
+    # Older versions and some installers also drop it directly under
+    # %LOCALAPPDATA%\Obsidian. Check all three.
+    OBSIDIAN_EXE=""
+    for candidate in \
+      "${LOCALAPPDATA:-$HOME/AppData/Local}/Programs/Obsidian/Obsidian.exe" \
+      "${PROGRAMFILES:-/c/Program Files}/Obsidian/Obsidian.exe" \
+      "${LOCALAPPDATA:-$HOME/AppData/Local}/Obsidian/Obsidian.exe"; do
+      if [[ -f "$candidate" ]]; then
+        OBSIDIAN_EXE="$candidate"
+        break
+      fi
+    done
+    if [[ -n "$OBSIDIAN_EXE" ]]; then
+      echo "  ✓ Obsidian (Windows) — $OBSIDIAN_EXE"
+    else
+      echo "  ⚠ Obsidian.exe not found under %LOCALAPPDATA% or %ProgramFiles%"
+      echo "    Download from https://obsidian.md — then re-run setup"
+      exit 1
+    fi
+    ;;
+  *)
+    echo "  ⚠ Linux: open Obsidian manually after setup (https://obsidian.md)"
+    ;;
+esac
 
 echo ""
 
 # ---------- 2. Plugin check ----------
 echo "2. Verifying bundled plugins..."
 REQUIRED_PLUGINS=(
-  "internetvin-terminal"
+  "terminal"
   "agentfiles"
   "obsidian-excalidraw-plugin"
 )
@@ -228,16 +264,29 @@ echo ""
 
 # ---------- 6. Open in Obsidian ----------
 echo "6. Opening the vault in Obsidian..."
-if [[ "$(uname)" == "Darwin" ]]; then
-  # Use Obsidian's URI scheme to open this specific vault
-  # Obsidian registers itself to handle obsidian:// URIs
-  VAULT_NAME=$(basename "$VAULT_ROOT")
-  VAULT_URI="obsidian://open?path=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$VAULT_ROOT")"
-  open "$VAULT_URI" || open -a Obsidian "$VAULT_ROOT"
-  echo "  ✓ Opened (if Obsidian didn't open, run: open -a Obsidian \"$VAULT_ROOT\")"
-else
-  echo "  ⚠ Non-macOS: open Obsidian manually and use File → Open vault → $VAULT_ROOT"
-fi
+# Use Node (already a hard dep — gbrain/skillkit need it) for URL-encoding
+# instead of python3, which isn't reliable on Windows.
+encode_uri() {
+  node -e 'process.stdout.write(encodeURIComponent(process.argv[1]))' "$1"
+}
+
+case "$PLATFORM" in
+  mac)
+    VAULT_URI="obsidian://open?path=$(encode_uri "$VAULT_ROOT")"
+    open "$VAULT_URI" || open -a Obsidian "$VAULT_ROOT"
+    echo "  ✓ Opened (if Obsidian didn't open, run: open -a Obsidian \"$VAULT_ROOT\")"
+    ;;
+  windows)
+    VAULT_URI="obsidian://open?path=$(encode_uri "$VAULT_ROOT")"
+    # Git Bash needs //c to escape the path-mangler that turns /c into a Win path
+    cmd.exe //c start "" "$VAULT_URI" 2>/dev/null \
+      || ( [[ -n "${OBSIDIAN_EXE:-}" ]] && "$OBSIDIAN_EXE" "$VAULT_ROOT" & )
+    echo "  ✓ Opened (if Obsidian didn't open, run: \"$OBSIDIAN_EXE\" \"$VAULT_ROOT\")"
+    ;;
+  *)
+    echo "  ⚠ Linux: open Obsidian manually and use File → Open vault → $VAULT_ROOT"
+    ;;
+esac
 
 echo ""
 
@@ -249,9 +298,9 @@ Next steps in Obsidian:
 
   1. FIRST TIME ONLY: Obsidian will ask "Trust author and enable plugins?"
      — click YES. This activates the bundled plugins:
-       • internetvin-terminal — embedded terminal (Cmd+P → "Terminal")
-       • agentfiles           — browse AI agent files
-       • excalidraw           — sketch drawings
+       • terminal     — embedded terminal (Cmd/Ctrl+P → "Terminal: Open terminal")
+       • agentfiles   — browse AI agent files
+       • excalidraw   — sketch drawings
 
   2. If the plugins don't activate automatically, go to:
      Settings → Community plugins → make sure Restricted mode is OFF

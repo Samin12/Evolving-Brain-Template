@@ -14,7 +14,7 @@ cd "$VAULT_ROOT"
 
 # Format: "plugin-id|owner/repo|tag"
 PLUGINS=(
-  "internetvin-terminal|internetvin/internetvin-terminal|1.1.2"
+  "terminal|polyipseity/obsidian-terminal|3.23.0"
   "agentfiles|railly/agentfiles|0.7.2"
   "obsidian-excalidraw-plugin|zsviczian/obsidian-excalidraw-plugin|2.22.0"
 )
@@ -47,4 +47,4 @@ done
 
 echo ""
 echo "=== Plugins installed ==="
-echo "Restart Obsidian to load them, or run: Cmd+P → 'Reload app without saving'"
+echo "Restart Obsidian to load them, or run: Cmd/Ctrl+P → 'Reload app without saving'"

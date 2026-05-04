@@ -65,13 +65,13 @@ Obsidian is the daily driver for reading and editing the vault. We depend on its
 
 The vault ships with three community plugins pre-downloaded and enabled (`.obsidian/plugins/`), so a fresh clone + `bash scripts/setup.sh` gives the user a working environment without hunting through the plugin store. All three are MIT-licensed and redistributed with credit per the MIT terms.
 
-### internetVin Terminal
+### Terminal (by polyipseity)
 
-**Repo:** https://github.com/internetvin/internetvin-terminal
-**Plugin ID:** `internetvin-terminal`
-**Pinned version:** 1.1.2
-**License:** MIT — Copyright (c) 2025 Vin Verma
-**What it does:** Embedded terminal for Obsidian with multi-tab support. Lets you run shell commands without leaving Obsidian.
+**Repo:** https://github.com/polyipseity/obsidian-terminal
+**Plugin ID:** `terminal`
+**Pinned version:** 3.23.0
+**License:** MIT — Copyright (c) 2023 polyipseity
+**What it does:** Cross-platform embedded terminal for Obsidian with profile support (Bash, Git Bash, cmd, PowerShell, WSL, zsh, Dash, etc.). Lets you run shell commands without leaving Obsidian. Replaces the previously-bundled internetVin Terminal (which was macOS-only).
 
 ### Agentfiles
 

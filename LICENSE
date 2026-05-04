@@ -29,8 +29,8 @@ their own MIT license:
 - garrytan/gbrain — Copyright (c) 2026 Garry Tan
   (pinned doc copies in 9 - Operations/upstream/gbrain/)
 
-- internetvin/internetvin-terminal — Copyright (c) 2025 Vin Verma
-  (bundled in .obsidian/plugins/internetvin-terminal/)
+- polyipseity/obsidian-terminal — Copyright (c) 2023 polyipseity
+  (bundled in .obsidian/plugins/terminal/)
 
 - railly/agentfiles — Copyright (c) 2026 Railly Hugo
   (bundled in .obsidian/plugins/agentfiles/)

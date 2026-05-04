@@ -114,7 +114,7 @@ Open `Onboarding/04 - connect your sources.md` and walk through one source end-t
 
 ## Step 7 — If they picked scheduling
 
-Walk through setting up GitHub Actions (or Trigger.dev, or launchd) to run the inbox processor on a cron. The workflow prompt at `9 - Operations/workflows/inbox processing.md` is the source of truth — the scheduler just needs to run Claude with that prompt on schedule.
+Walk through setting up GitHub Actions (or Trigger.dev, or launchd on macOS, or Task Scheduler on Windows) to run the inbox processor on a cron. The workflow prompt at `9 - Operations/workflows/inbox processing.md` is the source of truth — the scheduler just needs to run Claude with that prompt on schedule.
 
 After it's scheduled, confirm the first scheduled run worked by checking `9 - Operations/runs/YYYY-MM.md` for a new entry.
 

@@ -9,7 +9,7 @@ Capabilities the brain expects to have available. Two kinds:
 
 | Plugin | What it does | Version | Source | Required |
 |---|---|---|---|---|
-| `internetvin-terminal` | Embedded terminal with multi-tab support inside Obsidian | 1.1.2 | [internetvin/internetvin-terminal](https://github.com/internetvin/internetvin-terminal) | yes |
+| `terminal` | Cross-platform embedded terminal in Obsidian (Git Bash on Windows, zsh/bash on macOS/Linux). Default profile pre-set to Git Bash on Windows via `data.json`. | 3.23.0 | [polyipseity/obsidian-terminal](https://github.com/polyipseity/obsidian-terminal) | yes |
 | `agentfiles` | Browse / edit AI agent files (Claude Code, Cursor, Codex, Windsurf, …) from Obsidian. Dashboard view requires skillkit (auto-installed by `setup.sh`). | 0.7.2 | [railly/agentfiles](https://github.com/railly/agentfiles) | yes |
 | `obsidian-excalidraw-plugin` | Sketch drawings, diagrams, hand-drawn mind maps | 2.22.0 | [zsviczian/obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin) | yes |
 

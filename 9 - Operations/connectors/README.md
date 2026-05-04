@@ -24,7 +24,7 @@ _None._
 
 - **MCP server** — a Model Context Protocol server exposing tools Claude can call (e.g. GitHub MCP, Linear MCP, Heptabase MCP if it exists).
 - **API poller** — a script or service that calls a REST/GraphQL API on a schedule and drops results into `.inbox/<source>/`.
-- **Watch folder** — an OS-level mechanism (launchd, Hazel, inotify) that moves/copies files from somewhere on disk into `.inbox/<source>/`.
+- **Watch folder** — an OS-level mechanism (launchd or Hazel on macOS, inotify on Linux, Task Scheduler or `chokidar-cli` on Windows) that moves/copies files from somewhere on disk into `.inbox/<source>/`.
 - **iOS Shortcut** — an Apple Shortcut that captures something (voice memo, share sheet, dictation) and commits it to `.inbox/` via the GitHub API.
 - **Email rule** — a Gmail filter + forward + IMAP-to-file script that lands tagged emails in `.inbox/email/`.
 

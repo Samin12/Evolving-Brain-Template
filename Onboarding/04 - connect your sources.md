@@ -30,7 +30,11 @@ Wire it into `9 - Operations/workflows/capture via MCP.md` (we'll write that fil
 
 ### Option B: Native export + watch folder
 
-Many tools (Heptabase, Obsidian, Day One) have native markdown export to a folder. Point the export at `.inbox/<source>/`. Set up a cron or a file watcher (macOS: `launchd` or a Hazel rule; Linux: `inotifywait`) to `git add && commit && push` when new files arrive.
+Many tools (Heptabase, Obsidian, Day One) have native markdown export to a folder. Point the export at `.inbox/<source>/`. Set up a cron or a file watcher to `git add && commit && push` when new files arrive:
+
+- **macOS:** `launchd` plist or a Hazel rule
+- **Linux:** `inotifywait` from `inotify-tools`
+- **Windows:** Task Scheduler running a `.bat` on a polling interval, or a Node watcher (`chokidar-cli`) in a startup shortcut
 
 ### Option C: API pollers
 

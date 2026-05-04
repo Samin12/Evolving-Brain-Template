@@ -14,7 +14,7 @@ Run `9 - Operations/workflows/generate wiki.md` against the current state of the
    - Number of pages generated, grouped by category
    - Any files skipped due to `publishable: false` or sensitivity rules
    - The absolute path to `site/index.html`
-   - A command the user can run to open it (`open site/index.html` on macOS)
+   - A command the user can run to open it (`open site/index.html` on macOS, `start site/index.html` on Windows, `xdg-open site/index.html` on Linux)
 6. Update the `last_run` frontmatter in `9 - Operations/workflows/generate wiki.md` to now.
 7. Append a row to the current month's file in `9 - Operations/runs/`.
 

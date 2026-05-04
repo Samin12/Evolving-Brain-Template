@@ -14,8 +14,12 @@ bash scripts/setup.sh
 
 That script verifies your tools, checks the bundled Obsidian plugins, creates `Vault/.env` from the template, and opens the vault in Obsidian. When Obsidian prompts "Trust author and enable plugins?", click YES.
 
+**Platforms:** macOS, Linux, and Windows are all supported.
+- **Windows users** run `bash scripts/setup.sh` from **Git Bash** (ships with [Git for Windows](https://git-scm.com/download/win)). The terminal plugin and the embedded Git Bash profile are pre-wired so `claude` and the rest of the CLI tools work in-Obsidian out of the box.
+- **All platforms** need Node.js (≥18) on `PATH` — the setup script and several workflows shell out to `node`.
+
 You get three plugins pre-installed and enabled:
-- **internetVin Terminal** — embedded terminal in Obsidian
+- **Terminal** (by polyipseity) — embedded cross-platform terminal in Obsidian
 - **Agentfiles** — browse and edit AI agent skill / command files from inside Obsidian
 - **Excalidraw** — sketch diagrams and hand-drawn mind maps
 

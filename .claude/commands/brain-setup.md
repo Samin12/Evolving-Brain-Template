@@ -8,7 +8,7 @@ Run the full setup flow for a brand-new clone of this vault. This is what a new 
 
 1. **Run the setup script.** From the vault root, execute `bash scripts/setup.sh`. This handles:
    - Verifying git, curl, Obsidian are installed
-   - Checking the bundled plugins are present (`internetvin-terminal`, `agentfiles`, `obsidian-excalidraw-plugin`)
+   - Checking the bundled plugins are present (`terminal`, `agentfiles`, `obsidian-excalidraw-plugin`)
    - Re-downloading any missing plugins from their GitHub releases (via `scripts/install_plugins.sh`)
    - Copying `Vault/.env.example` → `Vault/.env` if it doesn't exist
    - Opening the vault in Obsidian via the `obsidian://` URL scheme
@@ -25,9 +25,9 @@ Run the full setup flow for a brand-new clone of this vault. This is what a new 
 ## If setup fails
 
 - **Obsidian not installed:** link https://obsidian.md and tell them to re-run `/brain-setup` after installing.
-- **curl / git missing:** platform-specific instructions (Homebrew on macOS, apt on Debian, etc).
+- **curl / git missing:** platform-specific instructions (Homebrew on macOS, apt on Debian, `winget install Git.Git` or chocolatey on Windows, etc).
 - **Plugin download fails:** check network, re-run `bash scripts/install_plugins.sh` manually. If still failing, tell them to open Obsidian, go to Community plugins, and install the three by hand:
-  - Terminal by `internetvin` — the "internetVin Terminal" one
+  - Terminal by `polyipseity` — the cross-platform "Terminal" plugin (id: `terminal`)
   - Agentfiles by `railly-hugo`
   - Excalidraw by `zsviczian`
 - **`Vault/.env` creation fails:** tell them to `cp Vault/.env.example Vault/.env` manually.
